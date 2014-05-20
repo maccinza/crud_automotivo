@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block extra_head %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}">
+    <script type="text/javascript">
+        var auth = "{{  user.is_authenticated() }}";
+        if (auth == "True") {
+            window.location.href = '/admin';
+        }
+
+        function cancelar() {
+            window.location.href = '/';
+        }
+    </script>
+{% endblock %}
+
+{% block body_content %}
+    {% if not user or not user.is_authenticated() %}
+        <div id="login-holder">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Formulário de Login</h3>
+                </div>
+                <div class="panel-body">
+                    <form role="form" method=post action="/login/" id="login-form">
+                        <div class="form-group">
+                            {{ render_field(form.email) }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(form.chave) }}
+                        </div>
+
+                        <div id="form-buttons">
+                            <input id="submit-button" type="submit" class="btn btn-primary" value="Login">
+                            <input id="cancel-button" type="button" onclick="cancelar()"
+                                   class="btn btn-default" value="Cancelar">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %},

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Revenda Automotiva</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css.map') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-theme.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-theme.css.map') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"> </script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+    {% from "_formhelpers.html" import render_field %}
+    {% from "_formhelpers.html" import render_field_wc %}
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    {% block body_content %} {% endblock %}
+</body>
+</html>
