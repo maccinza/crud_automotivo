@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block extra_head %}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="text/javascript">
         window.onload = function(){
             var termo = document.getElementById('search-input');
@@ -138,86 +139,120 @@
 
     </script>
 {% endblock %}
-{% block body_content %}
-    <div id="index-page">
-        <div id="navbar">
-            <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-                <div class="container">
-                    {% if user and user.is_authenticated() %}
-                        <p class="navbar-text">
-                            <a href="/admin/" class="navbar-link">
-                                <span class="glyphicon glyphicon-cog"> </span>
-                                Admin
-                            </a>
-                        </p>
-                        <p class="navbar-text navbar-right"><a href="{{ url_for('view_logout') }}">Logout</a>
-                        </p>
-                        <p class="navbar-text navbar-right">Logado como <b>{{ user.email }} </b>
-                            <span class="glyphicon glyphicon-user"></span>
-                        </p>
 
-                    {% else %}
-                        <p class="navbar-text navbar-right"><a href="{{ url_for('view_login') }}"> Login </a></p>
-                    {% endif %}
-                    <div class="input-group" id="search-bar">
-                        <input type="text" class="form-control" id="search-input">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" onclick="search()">
-                                <span class="glyphicon glyphicon-search"></span>
-                            </button>
-                        </span>
-                    </div>
-                    <button type="button" class="btn btn-default btn-sm" id="remove-filtro" onclick="remove_filtro()">
-                        <span class="glyphicon glyphicon-remove-circle"></span>
-                        <span id="texto-filtro"> Remove Filtro </span>
-                    </button>
-                </div>
-            </nav>
-        </div>
-        <div id="filters">
-            <h4 id="filters-title"> Filtros </h4>
-            <div id="filters-content">
-                <div class="row">
-                    <div class="col-md-3">
-                        {{ render_field_wc(filtros.ano) }}
-                    </div>
-                    <div class="col-md-3">
-                        {{ render_field_wc(filtros.fabricante) }}
-                    </div>
-                    <div class="col-md-3">
-                        {{ render_field_wc(filtros.modelo) }}
-                    </div>
-                    <div class="col-md-3" id="filtrar">
-                        <button type="button" class="btn btn-default btn-md" id="aplica-filtro" onclick="aplica_filtro()">
-                        <span class="glyphicon glyphicon-filter"></span>
-                        <span id="texto-filtrar"> Filtrar </span>
-                    </button>
-                    </div>
-                </div>
-            </div>
-            <p id="obs">Dica: Para usar os filtros, selecione as opções segurando o
-                botão Control (Ctrl) ou Command (Cmd) de seu teclado. Em seguida, clique em <b>Filtrar</b>. </p>
-        </div>
-        <div id="index-content">
-            <div class="row">
-            {% if automoveis|length > 0 %}
-                {% for a in automoveis %}
-                    <div class="col-sm-6 col-md-4">
-                        <div class="thumbnail">
-                            <img class="img-thumb" src='/images/{{ a.pk }}'>
-                            <div class="caption">
-                                <h4> {{ a.modelo }}</h4>
-                                <p> Fabricante: {{ a.fabricante.nome }}</p>
-                                <p> Ano: {{ a.ano }}</p>
+{% block body_content %}
+<div id="index-page">
+    <div id="navbar">
+        <div class="row">
+            <div class="col-md-12">
+                {% if user and user.is_authenticated() %}
+                    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+                        <div class="row">
+                            <div class="col-md-3 hidden-sm hidden-xs">
+                                <p class="navbar-text">
+                                    <a href="/admin/" class="navbar-link">
+                                        <span class="glyphicon glyphicon-cog"> </span>
+                                        Admin
+                                    </a>
+                                </p>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="input-group" id="search-bar">
+                                    <input type="text" class="form-control" id="search-input">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button" onclick="search()">
+                                            <span class="glyphicon glyphicon-search" id="lupa"></span>
+                                        </button>
+                                    </span>
+                                </div>
+                                <button type="button" class="btn btn-default btn-md"
+                                        id="no-filter-button" onclick="remove_filtro()">
+                                    <span class="glyphicon glyphicon-remove-circle"></span>
+                                    <span id="texto-filtro"> Remove Filtro </span>
+                                </button>
+                            </div>
+                            <div class="col-md-4 hidden-sm hidden-xs">
+                                <p class="navbar-text navbar-right">Logado como <b>{{ user.email }} </b>
+                                    <span class="glyphicon glyphicon-user"></span>
+                                </p>
+                                <p class="navbar-text navbar-right"><a href="{{ url_for('view_logout') }}">Logout</a>
+                                </p>
                             </div>
                         </div>
-                   </div>
-                {% endfor %}
-            {% else %}
-                <h3 id="no-results"> Não há registros no banco de dados.</h3>
-                <h4 id="results-tip"> Se estiver utilizando um filtro, remova-o e tente uma nova filtragem.</h4>
-            {% endif %}
+                    </nav>
+                {% else %}
+                    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-7">
+                                <div class="input-group" id="search-bar">
+                                    <input type="text" class="form-control" id="search-input">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button"
+                                                 onclick="search()">
+                                            <span class="glyphicon glyphicon-search"></span>
+                                        </button>
+                                    </span>
+                                </div>
+                                <button type="button" class="btn btn-default btn-md"
+                                        id="no-filter-button" onclick="remove_filtro()">
+                                    <span class="glyphicon glyphicon-remove-circle"></span>
+                                    <span id="texto-filtro"> Remove Filtro </span>
+                                </button>
+                            </div>
+                            <div class="col-md-3 hidden-sm hidden-xs">
+                                 <p class="navbar-text navbar-right">
+                                     <a href="{{ url_for('view_login') }}"> Login </a></p>
+                            </div>
+                        </div>
+                    </nav>
+                {% endif %}
             </div>
         </div>
     </div>
+    <div id="filters">
+        <div class="row"  >
+            <div class="col-md-4">
+                {{ render_field_wc(filtros.ano) }}
+            </div>
+            <div class="col-md-4">
+                {{ render_field_wc(filtros.fabricante) }}
+            </div>
+            <div class="col-md-4">
+                {{ render_field_wc(filtros.modelo) }}
+            </div>
+        </div>
+    </div>
+    <div class="row" id="filtrar">
+        <div class="col-md-12">
+            <p>Dica: Para usar os filtros, selecione as opções segurando o
+                botão Control (Ctrl) ou Command (Cmd) de seu teclado. Em seguida, clique em <b>Filtrar</b>. </p>
+            <button type="button" class="btn btn-default btn-md" id="aplica-filtro" onclick="aplica_filtro()">
+                    <span class="glyphicon glyphicon-filter"></span>
+                    <span id="texto-filtrar"> Filtrar </span>
+            </button>
+        </div>
+    </div>
+    <div id="index-content">
+        <div class="row">
+        {% if automoveis|length > 0 %}
+            {% for a in automoveis %}
+                <div class="col-sm-6 col-md-4">
+                    <div class="thumbnail">
+                        <img class="img-thumb" src='/images/{{ a.pk }}'>
+                        <div class="caption">
+                            <h4> {{ a.modelo }}</h4>
+                            <p> Fabricante: {{ a.fabricante.nome }}</p>
+                            <p> Ano: {{ a.ano }}</p>
+                        </div>
+                    </div>
+               </div>
+            {% endfor %}
+        {% else %}
+            <h3 id="no-results"> Não há registros no banco de dados.</h3>
+            <h4 id="results-tip"> Se estiver utilizando um filtro, remova-o e tente uma nova filtragem.</h4>
+        {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}
