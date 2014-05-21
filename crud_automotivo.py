@@ -137,8 +137,14 @@ def favicon():
 def index():
     u"""Funcao para tratamento da apresentacao da pagina incial"""
 
+    #opcoes dos filtros
+    #obtem e ordena as opcoes para os filtros de ano, fabricante e modelo
+    ano = [(opt, opt) for opt in sorted(Automovel.objects().distinct('ano'))]
+    fabricante = [(opt, opt) for opt in sorted(Fabricante.objects().distinct('nome'))]
+    modelo = [(opt, opt) for opt in sorted(Automovel.objects().distinct('modelo'))]
+
     #intancia formulario de filtros
-    form_filtro = FormFiltros()
+    form_filtro = FormFiltros(ano, fabricante, modelo)
     #coleta todos os automoveis cadastrados
     automoveis = Automovel.objects.all().order_by('fabricante.nome')
 
@@ -241,16 +247,16 @@ class Raiz(BaseView):
 class FormFiltros(form.Form):
     u"""Formulario de filtros para utilizacao na pagina inicial"""
 
-    #obtem e ordena as opcoes para os filtros de ano, fabricante e modelo
-    ano = [(opt, opt) for opt in sorted(Automovel.objects().distinct('ano'))]
-    fabricante = [(opt, opt) for opt in sorted(Fabricante.objects().distinct('nome'))]
-    modelo = [(opt, opt) for opt in sorted(Automovel.objects().distinct('modelo'))]
+    ano = fields.SelectMultipleField()
+    fabricante = fields.SelectMultipleField()
+    modelo = fields.SelectMultipleField()
 
-    #configura campos do formulario com as opcoes
-    ano = fields.SelectMultipleField(choices=ano)
-    fabricante = fields.SelectMultipleField(choices=fabricante)
-    modelo = fields.SelectMultipleField(choices=modelo)
-
+    def __init__(self, anos, fabricantes, modelos):
+        super(FormFiltros, self).__init__()
+         #configura campos do formulario com as opcoes
+        self.ano.choices = anos
+        self.fabricante.choices = fabricantes
+        self.modelo.choices = modelos
 
 #configura interface de admin e suas views
 admin = Admin(app, name='Revenda Automotiva - CRUD', index_view=MyAdminIndexView())
